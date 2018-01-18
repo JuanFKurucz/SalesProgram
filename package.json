@@ -9,6 +9,7 @@
   "author": "Juan Francisco Kurucz",
   "license": "ISC",
   "dependencies": {
-    "electron": "^1.7.10"
+    "electron": "^1.7.10",
+    "electron-squirrel-startup": "^1.0.0"
   }
 }
