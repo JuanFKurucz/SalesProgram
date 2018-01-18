@@ -30,7 +30,6 @@ app.on('ready', () => {
   page.once('did-frame-finish-load', () => {
     const checkOS = isWindowsOrmacOS();
     if (checkOS) {
-      // Initate auto-updates on macOs and windows
       appUpdater();
     }});
 });
