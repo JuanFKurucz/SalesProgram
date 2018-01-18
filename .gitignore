@@ -1,4 +1,10 @@
 data/*
+sales-program-win32-x64
+sales-program-linux-ia32
+sales-program-linux-x64
+sales-program-win32-x64
+sales-program-linux-armv7l
+sales-program-win32-ia32
 !data/profile.json
 # Logs
 logs
