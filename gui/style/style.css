@@ -1,0 +1,58 @@
+input {
+  border:0;
+}
+
+.center{
+  text-align: center;
+}
+.center input{
+  text-align: center;
+}
+
+.left{
+  text-align: left;
+}
+.left input{
+  text-align: left;
+}
+
+.bold{
+  font-weight: bold;
+}
+.bold input{
+  font-weight: bold;
+}
+
+.right{
+  text-align: right;
+}
+.right input{
+  text-align: right;
+}
+nav {
+  -webkit-app-region: drag;
+}
+
+a,input{
+  -webkit-app-region: no-drag;
+}
+
+.newProfile input{
+  color:black;
+}
+
+
+table {
+  border: 1px solid black;
+  border-collapse: separate;
+  border-spacing: 5px;
+}
+
+.line{
+  border-bottom: 1px solid #000;
+}
+
+table td {
+  border-left: 1px solid rgba(0,0,0,0.3);
+ }
+table td:first-child { border-left: none; }

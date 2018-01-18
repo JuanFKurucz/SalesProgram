@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Sales Program</title>
+  <link rel="stylesheet" href="style/bootstrap.min.css">
+  <link rel="stylesheet" href="style/style.css">
+  <script src="src/bootstrap.min.js"></script>
+  <script src="src/script.js"></script>
+</head>
+<body onload="init()">
+  <div class="page">
+    <nav class="navbar navbar-inverse" style="margin:0px;">
+      <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" style="-webkit-app-region: drag !important;" href="#">Sales Program</a>
+      </div>
+      <ul class="nav navbar-nav" id="profiles">
+        <li class="newProfile"><a href="#"><input type="text" placeholder="New Profile" /><input id="newProfile" type="submit" value="Add" /></a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a id="MinimizeProgram" href="#">Minimize</a></li>
+        <li><a id="CloseProgram" href="#">Close</a></li>
+      </ul>
+      </div>
+    </nav>
+
+    <div class="container" style="">
+      <div class="row">
+        <div class="col-sm-16">
+          <div>
+            <table id="calcTable" style="width:100%">
+              <tr>
+                <td id="profileTitle" colspan="999" class="center bold"></td>
+              </tr>
+              <tr id="calcDates">
+                <td class="line">#</td>
+              </tr>
+              <tr title="TransferCharge">
+                <td>Transfer charge</td>
+              </tr>
+              <tr title="TotalSales">
+                <td>Total sales</td>
+              </tr>
+              <tr title="AllSales">
+                <td>All Sales</td>
+              </tr>
+              <tr title="70">
+                <td>70%</tdtd>
+              </tr>
+              <tr title="Share">
+                <td>Share</td>
+              </tr>
+            </table>
+          </div>
+          <div id="dataDiv"></div>
+        </div>
+    </div>
+  </div>
+</body>
+</html>

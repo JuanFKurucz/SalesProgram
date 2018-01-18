@@ -1,0 +1,14 @@
+{
+  "name": "sales-program",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Juan Francisco Kurucz",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^1.7.10"
+  }
+}
