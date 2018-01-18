@@ -46,7 +46,11 @@ table {
   border: 1px solid black;
   border-collapse: separate;
   border-spacing: 5px;
+  overflow-x: auto;
+  white-space: nowrap;
+  display: block;
 }
+
 
 .line{
   border-bottom: 1px solid #000;
@@ -55,4 +59,6 @@ table {
 table td {
   border-left: 1px solid rgba(0,0,0,0.3);
  }
+
+
 table td:first-child { border-left: none; }

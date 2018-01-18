@@ -17,23 +17,7 @@ function isWindowsOrmacOS() {
 	return process.platform === 'darwin' || process.platform === 'win32';
 }
 
-app.on('ready', () => {
-  mainWindow = new electron.BrowserWindow({
-      height: 600,
-      width: 600
-  });
 
-  mainWindow.loadURL("https://github.com");
-
-  const page = mainWindow.webContents;
-
-  page.once('did-frame-finish-load', () => {
-    const checkOS = isWindowsOrmacOS();
-    if (checkOS) {
-      appUpdater();
-    }});
-});
-/*
 function init(){
 	mainWindow = new electron.BrowserWindow(
 		{
@@ -44,6 +28,13 @@ function init(){
 		}
 	)
 	mainWindow.loadURL(path.normalize(__dirname+"\\gui\\index.html"));
+/*	const page = mainWindow.webContents;
+
+	page.once('did-frame-finish-load', () => {
+		const checkOS = isWindowsOrmacOS();
+		if (checkOS) {
+			appUpdater();
+		}});*/
 }
 
 electron.app.on('ready', function(){
@@ -58,4 +49,4 @@ electron.app.on('activate', function () {
   if (mainWindow === null) {
 		init();
   }
-})*/
+})
