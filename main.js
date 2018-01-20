@@ -4,6 +4,9 @@ const path = require("path");
 const electron = require('electron');
 const {app} = require('electron');
 const {appUpdater} = require('./autoupdater');
+
+
+
 let mainWindow;
 
 /* Handling squirrel.windows events on windows
@@ -28,13 +31,18 @@ function init(){
 		}
 	)
 	mainWindow.loadURL(path.normalize(__dirname+"\\gui\\index.html"));
-/*	const page = mainWindow.webContents;
+	try{
+	const page = mainWindow.webContents;
 
 	page.once('did-frame-finish-load', () => {
 		const checkOS = isWindowsOrmacOS();
 		if (checkOS) {
 			appUpdater();
-		}});*/
+		}});
+
+	}catch(e){
+
+	}
 }
 
 electron.app.on('ready', function(){

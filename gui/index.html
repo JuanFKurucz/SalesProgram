@@ -17,6 +17,12 @@
       <ul class="nav navbar-nav" id="profiles">
         <li class="newProfile"><a href="#"><input type="text" placeholder="New Profile" /><input id="newProfile" type="submit" value="Add" /></a></li>
       </ul>
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="#"><label for="importNumbersButton">Import numbers</label></a>
+        </li>
+      </ul>
+      <input id="importNumbersButton" accept="text/plain" style="display:none;" type="file">
       <ul class="nav navbar-nav navbar-right">
         <li><a id="MinimizeProgram" href="#">Minimize</a></li>
         <li><a id="CloseProgram" href="#">Close</a></li>
@@ -34,20 +40,26 @@
             <tr id="calcDates">
               <td class="line">#</td>
             </tr>
+            <tr title="Recharges" style="text-decoration: underline;">
+              <td style="font-weight:bold;text-decoration: none !important">Recharges</td>
+            </tr>
             <tr title="TransferCharge">
-              <td>Transfer charge</td>
+              <td style="font-weight:bold;">Transfer charge</td>
             </tr>
             <tr title="TotalSales">
-              <td>Total sales</td>
+              <td style="font-weight:bold;">Total sales</td>
+            </tr>
+            <tr>
+              <td><br /></td>
             </tr>
             <tr title="AllSales">
-              <td>All Sales</td>
+              <td style="font-weight:bold;">All Sales</td>
             </tr>
             <tr title="70">
-              <td>70%</tdtd>
+              <td style="font-weight:bold;">70%</tdtd>
             </tr>
             <tr title="Share">
-              <td>Share</td>
+              <td style="font-weight:bold;">Share</td>
             </tr>
           </table>
         </div>

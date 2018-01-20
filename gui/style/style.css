@@ -16,12 +16,18 @@ input {
   text-align: left;
 }
 
+.numberLine{
+  margin:5px;
+  font-weight: bold;
+}
+
 .bold{
   font-weight: bold;
 }
 .bold input{
   font-weight: bold;
 }
+
 
 .right{
   text-align: right;
