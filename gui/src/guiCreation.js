@@ -8,17 +8,7 @@ function elementCreator(type,parent,classes="left"){
 }
 
 function formatDate(date,value=false){
-  var dateSeparated;
-  if(date.indexOf("-")==-1){
-    dateSeparated=date.split("/");
-  } else {
-    dateSeparated=date.split("-");
-  }
-  for(var d=0;d<dateSeparated.length;d++){
-    if(dateSeparated[d].length==1){
-      dateSeparated[d]="0"+dateSeparated[d];
-    }
-  }
+  var dateSeparated=date.split("-");
   if(value==false){
     if(dateSeparated[0].length==4){
       dateSeparated.reverse();
@@ -41,98 +31,71 @@ function getElementIndex(node) {
     return index;
 }
 
-function newDateColumn(key,data,col){
-  try{
-    var index=col;
-    col+=1;
-    var ndate = new Date(parseInt(key));
-    var stringDate=ndate.getDate()+"-"+ndate.getMonth()+"-"+ndate.getFullYear();
-    thDate = document.querySelector("#numbersAndDatesTitles").getElementsByTagName("th")[index];
-
-    var optiond=document.createElement("option");
-    optiond.value=formatDate(stringDate,true);
-    optiond.textContent=formatDate(stringDate);
-    document.querySelector("#deleteSelect").querySelector("optgroup[label='Dates']").appendChild(optiond);
-
-    var newInputDate = thDate.getElementsByTagName("input")[0];
-    newInputDate.onchange=function(){
-      detectDupliactedDate(this,optiond);
+function findInput(val,container){
+  var cont = container;
+  for(var th=1;th<cont.length;th++){
+    if(cont[th].getElementsByTagName("input")[0].value==val){
+      return th;
     }
-    newInputDate.value=formatDate(stringDate,true);
-
-    var nclone = document.querySelector("#calcDates").getElementsByTagName("td")[index];
-    nclone.textContent=formatDate(stringDate);
-
-    for(var subKey in data[key]){
-      newNumberTr=document.querySelector("#dataTable").querySelector("tr[number='"+subKey+"']");
-      if(newNumberTr.getElementsByTagName("input")[0].value==""){
-        newNumberTr.getElementsByTagName("input")[0].value=subKey;
-        newNumberTr.getElementsByTagName("input")[0].onchange=function(){
-          detectDupliactedNumber(this,option);
-        }
-        var option=document.createElement("option");
-        option.value=subKey;
-        option.textContent=subKey;
-        document.querySelector("#deleteSelect").querySelector("optgroup[label='Numbers']").appendChild(option);
-      }
-      newNumberTr.getElementsByTagName("input")[index].value=data[key][subKey];
-    }
-
-    var tempData=data;
-    delete tempData[key];
-    var ndata;
-    for(var k in tempData){
-      ndata=k;
-      break;
-    }
-    if(Object.keys(tempData).length>0){
-      return newDateColumn(ndata,tempData,col);
-    } else {
-      return col;
-    }
-  } catch(e){
-
   }
+  return -1;
+}
+
+function createDeleteOption(type,val){
+  var option=document.createElement("option");
+  if(type=="Dates"){
+    option.value=formatDate(val,true);
+    option.textContent=formatDate(val);
+  } else if(type=="Numbers"){
+    option.value=val;
+    option.textContent=val;
+  }
+  document.querySelector("#deleteSelect").querySelector("optgroup[label="+type+"]").appendChild(option);
 }
 
 function generateRowsColumns(data){
-  var calcTable=document.querySelector("#calcTable");
-  var totalSales=calcTable.querySelector("tr[title='TotalSales']");
-  var numbers={};
-  var datesCount=0;
-  for(var key in data){
-    var index=document.querySelector("#numbersAndDatesTitles").getElementsByTagName("th").length;
-    datesCount++;
+  var calcTable = document.querySelector("#calcTable");
+  var dataTable = document.querySelector("#dataTable");
+  var numbers=data["numbers"];
+  var dates=data["dates"];
+  var numbersData=data["values"];
+  dates.sort();
+  for(var d=0;d<dates.length;d++){
     var thDate = elementCreator("th",document.querySelector("#numbersAndDatesTitles"));
     var newInputDate = elementCreator("input",thDate,"center line");
     newInputDate.setAttribute("type","date");
-    newInputDate.onchange=function(){
-      document.querySelector("#calcDates").children[this.parentElement.parentElement.children.indexOf(this.parentElement)].textContent=formatDate(this.value);
-    }
+    newInputDate.value=dates[d];
     var nclone = elementCreator("td",document.querySelector("#calcDates"),"center bold line");
-    nclone.textContent=newInputDate.value;
-
-    for(var subKey in data[key]){
-      numbers[subKey]=true;
-    }
-    elementCreator("td",totalSales);
+    nclone.textContent=formatDate(newInputDate.value);
+    elementCreator("td",calcTable.querySelector("tr[title='TotalSales']"));
     elementCreator("td",calcTable.querySelector("tr[title='Recharges']"));
     elementCreator("td",calcTable.querySelector("tr[title='TransferCharge']"));
+    createDeleteOption("Dates",dates[d]);
   }
-  var num=0;
-  for(var n in numbers){
-    num++;
-    var newNumberTr=elementCreator("tr",document.querySelector("#dataTable"));
-    newNumberTr.setAttribute("number",n);
+
+  for(var n=0;n<numbers.length;n++){
+    var newNumberTr=elementCreator("tr",dataTable);
+    newNumberTr.setAttribute("number",numbers[n]);
     var tdE=elementCreator("td",newNumberTr,"center");
-    elementCreator("span",tdE,"numberLine").textContent=num + ".|";
-    elementCreator("input",tdE).setAttribute("type","number");
-    for(var i=0;i<datesCount;i++){
-      var n=elementCreator("input",elementCreator("td",newNumberTr));
-      n.setAttribute("type","number");
-      n.onchange=function(){
+    elementCreator("span",tdE,"numberLine").textContent=n+1 + ".|";
+    var int=elementCreator("input",tdE);
+    int.setAttribute("type","number");
+    int.value=numbers[n];
+    createDeleteOption("Numbers",numbers[n]);
+    for(var i=0;i<Object.keys(dates).length;i++){
+      var na=elementCreator("input",elementCreator("td",newNumberTr));
+      na.setAttribute("type","number");
+      na.onchange=function(){
         makeCalculations();
       }
+    }
+  }
+
+  for(var key in numbersData){
+    var x=findInput(key.split(",")[0],document.querySelector("#numbersAndDatesTitles").getElementsByTagName("th"));
+    var y=findInput(key.split(",")[1],dataTable.getElementsByTagName("tr"));
+    if(x!=-1 && y!=-1){
+      dataTable.getElementsByTagName("tr")[y].getElementsByTagName("td")[x].getElementsByTagName("input")[0].value=numbersData[key];
     }
   }
 
@@ -146,7 +109,7 @@ function createTables(data){
   table.style="width:100%";
   table.id="dataTable";
 
-  var col=1;
+  var col=data["dates"].length;
   var highTr = elementCreator("tr",table);
   var thDates = elementCreator("th",highTr,"center");
   thDates.setAttribute("colspan",col);
@@ -158,15 +121,7 @@ function createTables(data){
   thNumbres.textContent="Numbers";
 
   generateRowsColumns(data);
-  if(Object.keys(data).length>0){
-    var tempData=data;
-    var ndata;
-    for(var k in tempData){
-      ndata=k;
-      break;
-    }
-    col=newDateColumn(ndata,tempData,col);
-  }
+
   document.querySelector("#profileTitle").setAttribute("colspan",col);
   thDates.setAttribute("colspan",col);
 
@@ -191,7 +146,7 @@ function createMenuProfile(name){
 }
 
 function createMenu(){
-  forEachDirectory(appDir+"data",function(file){
+  forEachDirectory(function(file){
     createMenuProfile(file);
   })
 }
@@ -242,7 +197,7 @@ function createButtons(){
 }
 
 function loadProfiles(callback){
-  loadFile(appDir+"data\\profiles.json",function(fdata){
+  loadFile(appDir+"data\\config_profiles.json",function(fdata){
     var object = JSON.parse(fdata);
     callback(object);
   })
@@ -266,6 +221,7 @@ function addNumberFunction(fill=""){
   var option=elementCreator("option",document.querySelector("#deleteSelect optgroup[label='Numbers']"));
 
   var numberTd=elementCreator("td",newNumberTr,"center");
+  elementCreator("span",numberTd,"numberLine").textContent=getElementIndex(newNumberTr)-1 + ".|";
   var newInput=elementCreator("input",numberTd);
   newInput.setAttribute("type","number");
   newInput.onchange=function(){
@@ -288,8 +244,14 @@ function addNumberFunction(fill=""){
 
 function detectDupliactedDate(ele,option){
   try{
-    if(document.querySelector("#numbersAndDatesTitles").querySelectorAll("input[date='"+ele.value+"']").length==1){
-      throw new Error("This date already exists")
+    var count=0;
+    for(var i=0;i<document.querySelectorAll("#numbersAndDatesTitles input").length;i++){
+      if(document.querySelectorAll("#numbersAndDatesTitles input")[i].value==ele.value){
+        count++;
+        if(count>1){
+          throw new Error("This date already exists");
+        }
+      }
     }
     option.textContent=formatDate(ele.value);
     option.value=ele.value;
@@ -306,8 +268,6 @@ function addNewDateFunction(){
   var subTr=document.querySelector("#numbersAndDatesTitles");
   var newTh = document.createElement("th");
   newTh.setAttribute("class","center bold");
-
-  //subTr.insertBefore(newTh,subTr.getElementsByTagName("th")[1]);
   subTr.appendChild(newTh);
 
   var option=document.createElement("option");
@@ -321,34 +281,23 @@ function addNewDateFunction(){
 
   var nclone = document.createElement("td");
   nclone.setAttribute("class","center bold");
-
-  //document.querySelector("#calcDates").insertBefore(nclone,document.querySelector("#calcDates").getElementsByTagName("td")[1]);
   document.querySelector("#calcDates").appendChild(nclone);
-
   nclone.textContent=newInputDate.value;
 
   var trSales=document.querySelector("#calcTable tr[title='Recharges']");
   var newTd1=document.createElement("td");
-
-  //trTransferCharge.insertBefore(newTd1,trTransferCharge.getElementsByTagName("td")[1]);
   trSales.appendChild(newTd1);
 
   var trTransferCharge=document.querySelector("#calcTable tr[title='TransferCharge']");
   var newTd1=document.createElement("td");
-
-  //trTransferCharge.insertBefore(newTd1,trTransferCharge.getElementsByTagName("td")[1]);
   trTransferCharge.appendChild(newTd1);
 
   var trTotalSales=document.querySelector("#calcTable tr[title='TotalSales']");
   var newTd1=document.createElement("td");
-
-  //trTotalSales.insertBefore(newTd1,trTotalSales.getElementsByTagName("td")[1]);
   trTotalSales.appendChild(newTd1);
 
   for(var i=2;i<table.getElementsByTagName("tr").length;i++){
     var newTd=document.createElement("td");
-
-    //table.getElementsByTagName("tr")[i].insertBefore(newTd,table.getElementsByTagName("tr")[i].getElementsByTagName("td")[1]);
     table.getElementsByTagName("tr")[i].appendChild(newTd);
 
     var newInput=elementCreator("input",newTd);

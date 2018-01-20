@@ -1,79 +1,41 @@
 const fs = require("fs");
 const path = require("path");
+const {app} = require('electron').remote;
+
+var appData=path.normalize(app.getPath("userData")+"\\data");
+
 var datesCount;
 function numberAs(a,b) {
   return a-b;
 }
-function sortOnKeys(dict) {
-    var sorted = [];
-    for(var key in dict) {
-      sorted[sorted.length] = key;
-    }
-    sorted.sort(numberAs);
-    var tempDict = {};
-    for(var i = 0; i < sorted.length; i++) {
-        tempDict[sorted[i]] = dict[sorted[i]];
-    }
-    return tempDict;
-}
 
 function loadData(profile="default",callback){
-  var dataFolder=appDir+"data\\"+profile;
+  var dataFolder=appData+"\\"+profile+".json";
   var data={};
   if (fs.existsSync(dataFolder)) {
-    var i=0;
-    fs.readdir(dataFolder, function (err, files) {
-      datesCount=files.length;
-      if(datesCount==0){
-        callback(sortOnKeys(data));
-      } else {
-        files.forEach(function (file) {
-          var curPath = dataFolder + "\\" + file;
-          if (!fs.lstatSync(curPath).isDirectory()) { // recurse
-            fs.readFile(curPath, "utf8", function (err, fdata) {
-              i++;
-              if (err) {
-                  throw err;
-              }
-              var object = JSON.parse(fdata);
-              var values=file.replace(".json","").split("-");
-              var time = new Date(values[0],values[1],values[2])
-              data[time.getTime()]=object;
-              if(i==files.length){
-                callback(sortOnKeys(data));
-              }
-            });
-          }
-        });
-      }
+    fs.readFile(dataFolder, "utf8", function (err, fdata) {
+      if (err) { throw err; }
+      var object = JSON.parse(fdata);
+      callback(object);
     });
   } else {
-    if(profile=="default"){
-      fs.mkdirSync(dataFolder);
-      loadData(profile,callback);
-      location.reload();
-    } else {
-      alert("Data folder not found");
-    }
+    alert("Data folder not found");
   }
 }
 
 function writeFiles(dataFolder,allData){
-  for(var dicKey in allData){
-    var JSONo = JSON.stringify(allData[dicKey]);
-    fs.writeFile(dataFolder+"\\"+dicKey+".json",JSONo,'utf8',function(err) {
-        if(err) {
-            return console.log(err);
-        }
-    });
-  }
+  fs.writeFile(dataFolder,JSON.stringify(allData),'utf8',function(err) {
+      if(err) {
+          return console.log(err);
+      }
+  });
 }
 
-function forEachDirectory(path,callback){
-  fs.readdir(path, function (err, files) {
+function forEachDirectory(callback){
+  fs.readdir(appData, function (err, files) {
     files.forEach(function (file) {
-      if (fs.lstatSync(path+"\\"+file).isDirectory()) { // recurse
-        callback(file);
+      if (file!="config_profiles.json") { // recurse
+        callback(file.replace(".json",""));
       }
     });
   });
@@ -89,29 +51,24 @@ function loadFile(path,callback,encoding="utf8"){
 }
 
 function createDir(path){
-  if (!fs.existsSync(path)){
-    fs.mkdirSync(path);
+  if (!fs.existsSync(appData+"\\"+path)){
+    var emptyFile={
+      "numbers":[],
+      "dates":[],
+      "valies":{}
+    }
+    fs.writeFile(appData+"\\"+path,JSON.stringify(emptyFile),'utf8',function(err) {
+        if(err) {
+            return console.log(err);
+        }
+    });
   }
 }
 
 function saveTableToJson(sourcePath,allData){
-  var len=0;
-  fs.readdir(sourcePath, (err, files) => {
-    if (err) throw err;
-    if(files.length==0){
-      writeFiles(sourcePath,allData);
-    } else {
-      for (const file of files) {
-        fs.unlink(path.join(sourcePath, file), err => {
-          if (err) throw err;
-          len++;
-          if(len==files.length){
-            writeFiles(sourcePath,allData);
-          }
-        });
-      }
-    }
-  });
+  if (fs.existsSync(appData+"\\"+sourcePath+".json")) {
+    writeFiles(appData+"\\"+sourcePath+".json",allData);
+  }
 }
 
 function importNumbers(pathFile,callback){
@@ -121,6 +78,21 @@ function importNumbers(pathFile,callback){
   });
 }
 
+function CheckDataFolder(callback){
+  if (!fs.existsSync(appData)) {
+      fs.mkdirSync(appData);
+      createDir(appData+"\\default.json");
+      fs.writeFile(appData+"\\config_profiles.json",JSON.stringify({"_defaultProfileOnLaunch":"default"}),'utf8',function(err) {
+          if(err) {
+              return console.log(err);
+          }
+          callback();
+      });
+  } else {
+    callback();
+  }
+}
+
 exports = module.exports = {
-	saveTableToJson,loadFile,forEachDirectory,createDir,loadData,importNumbers
+	saveTableToJson,loadFile,forEachDirectory,createDir,loadData,importNumbers,CheckDataFolder
 };

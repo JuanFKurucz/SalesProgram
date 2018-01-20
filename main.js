@@ -1,10 +1,9 @@
-const fs = require("fs");
 const path = require("path");
 
 const electron = require('electron');
 const {app} = require('electron');
-const {appUpdater} = require('./autoupdater');
-
+//const {appUpdater} = require('./autoupdater');
+//const updater = require('electron-simple-updater');
 
 
 let mainWindow;
@@ -31,7 +30,10 @@ function init(){
 		}
 	)
 	mainWindow.loadURL(path.normalize(__dirname+"\\gui\\index.html"));
-	try{
+
+
+
+	/*try{
 	const page = mainWindow.webContents;
 
 	page.once('did-frame-finish-load', () => {
@@ -42,11 +44,21 @@ function init(){
 
 	}catch(e){
 
-	}
+	}*/
+}
+
+function update(){
+	init();
+	/*console.log(updater.init({
+		checkUpdateOnStart:true,
+		url:'https://raw.githubusercontent.com/JuanFKurucz/SalesProgram/master/updates.json
+		https://raw.githubusercontent.com/megahertz/electron-simple-updater/master/example/updates.json'
+	}).meta);*/
+	//console.log(updater.checkForUpdates());
 }
 
 electron.app.on('ready', function(){
-	init();
+	update();
 })
 electron.app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
@@ -55,6 +67,6 @@ electron.app.on('window-all-closed', function () {
 })
 electron.app.on('activate', function () {
   if (mainWindow === null) {
-		init();
+		update();
   }
 })

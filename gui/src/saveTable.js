@@ -1,37 +1,61 @@
-function isDate(d){
+/*function isDate(d){
   if(Date.parse(d)==NaN){
     return false;
   } else {
     return true;
   }
-}
+}*/
 
 function saveTable(){
   try{
     var dataTable=document.querySelector("#dataDiv");
-    var allTrs=dataTable.getElementsByTagName("tr");
+
+
+    var datesArray=[];
     var dates=document.querySelector("#numbersAndDatesTitles").getElementsByTagName("th");
-    var allData={};
     for(var d=1;d<dates.length;d++){
-      var key=dates[d].getElementsByTagName("input")[0].value;
-      if(isDate(key)==false){
+      datesArray.push(dates[d].getElementsByTagName("input")[0].value);
+      /*if(isDate(key)==false){
         throw new Error("Invalid date on date number "+d);
-      }
-      allData[key]={};
+      }*/
+      /*allData[key]="";
       for(var a=2;a<allTrs.length;a++){
         var allTds=allTrs[a].getElementsByTagName("td");
-        allData[key][allTds[0].getElementsByTagName("input")[0].value]=allTds[d].getElementsByTagName("input")[0].value;
+        allData[key]+=allTds[0].getElementsByTagName("input")[0].value+","+allTds[d].getElementsByTagName("input")[0].value;
+        if(a!=allTrs.length-1){
+          allData[key]+="\n";
+        }
+      }*/
+    }
+    var valuesDic={};
+    var numbersArray=[];
+    var allTrs=dataTable.getElementsByTagName("tr");
+    for(var tr=2;tr<allTrs.length;tr++){
+      var actualNumber=allTrs[tr].getElementsByTagName("td")[0].getElementsByTagName("input")[0].value;
+      numbersArray.push(actualNumber);
+
+      for(var td=1;td<allTrs[tr].getElementsByTagName("td").length;td++){
+        if(allTrs[tr].getElementsByTagName("td")[td].getElementsByTagName("input")[0].value!=""){
+          valuesDic[allTrs[1].getElementsByTagName("th")[td].getElementsByTagName("input")[0].value+","+actualNumber]=allTrs[tr].getElementsByTagName("td")[td].getElementsByTagName("input")[0].value;
+        }
       }
     }
 
-    for(var dicKey in allData){
+    /*for(var dicKey in allData){
       if(dicKey.split("-").length!=3){
         throw new Error("Invalid format date on date "+dicKey);
       }
-    }
+    }*/
 
+
+
+    var allData={
+      "dates":datesArray,
+      "numbers":numbersArray,
+      "values":valuesDic
+    };
     saveTableToJson(
-      appDir+"data\\"+document.querySelector("#profileTitle").textContent,
+      document.querySelector("#profileTitle").textContent,
       allData
     );
   } catch(e){
