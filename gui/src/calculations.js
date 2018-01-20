@@ -1,3 +1,16 @@
+function roundNumbers(number){
+  var text="";
+  var ish="";
+  if(number.toString().split(".").length>1&&number.toString().split(".")[1].length>2){
+    ish=" *(."+number.toString().split(".")[1].substr(0,2)+")";
+    number=Math.round(number);
+    text = number + ish;
+  } else {
+    text = number;
+  }
+  return text;
+}
+
 function makeCalculations(){
   var table=document.querySelector("#dataTable");
   var calcTable=document.querySelector("#calcTable");
@@ -18,14 +31,22 @@ function makeCalculations(){
       }
     }
 
-    calcTable.querySelector("tr[title='Recharges']").getElementsByTagName("td")[y].textContent=sales;
-    totalSales.getElementsByTagName("td")[y].textContent=sales-parseFloat(sales*0.05);
-    calcTable.querySelector("tr[title='TransferCharge']").getElementsByTagName("td")[y].textContent=parseFloat(sales*0.05);
+    calcTable.querySelector("tr[title='Recharges']").getElementsByTagName("td")[y].textContent=roundNumbers(sales);
+    var totalSalest=(sales-parseFloat(sales*0.05));
+    totalSales.getElementsByTagName("td")[y].textContent=roundNumbers(totalSalest);
+    calcTable.querySelector("tr[title='TransferCharge']").getElementsByTagName("td")[y].textContent=roundNumbers(parseFloat(sales*0.05));
+
+    calcTable.querySelector("tr[title='70Daily']").getElementsByTagName("td")[y].textContent=roundNumbers(totalSalest*0.7);
+    calcTable.querySelector("tr[title='ShareDaily']").getElementsByTagName("td")[y].textContent=roundNumbers((totalSalest*0.7)/2);
+
     total+=sales-parseFloat(sales*0.05);
   }
-  calcTable.querySelector("tr[title='AllSales']").getElementsByTagName("td")[1].textContent=parseFloat(total);
-  calcTable.querySelector("tr[title='70']").getElementsByTagName("td")[1].textContent=parseFloat(total*0.7);
-  calcTable.querySelector("tr[title='Share']").getElementsByTagName("td")[1].textContent=parseFloat(total*0.7)/2;
+  calcTable.querySelector("tr[title='AllSales']").getElementsByTagName("td")[1].textContent=roundNumbers(parseFloat(total));
+
+
+  calcTable.querySelector("tr[title='70']").getElementsByTagName("td")[1].textContent=roundNumbers((total*0.7));
+
+  calcTable.querySelector("tr[title='Share']").getElementsByTagName("td")[1].textContent=roundNumbers((total*0.7)/2);
 }
 
 exports = module.exports = {

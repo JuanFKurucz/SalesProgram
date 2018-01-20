@@ -15,6 +15,13 @@ function init(){
     document.querySelector("#MinimizeProgram").onclick=function(){
       remote.BrowserWindow.getFocusedWindow().minimize();
     }
+    document.querySelector("#FullScreenProgram").onclick=function(){
+      if(remote.BrowserWindow.getFocusedWindow().isFullScreen()){
+        remote.BrowserWindow.getFocusedWindow().setFullScreen(false);
+      } else {
+        remote.BrowserWindow.getFocusedWindow().setFullScreen(true);
+      }
+    }
     document.querySelector("#CloseProgram").onclick=function(){
       remote.BrowserWindow.getFocusedWindow().close();
     }

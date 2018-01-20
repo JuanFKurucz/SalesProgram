@@ -66,5 +66,25 @@ table td {
   border-left: 1px solid rgba(0,0,0,0.3);
  }
 
+#dataTable td, #datable th, #dataTable input[type="date"], #dataTable input[type="number"]{
+  max-width: 125px;
+}
+#dataTable input[type="date"]{
+  font-size:13px;
+}
+tr[number] input{
+  width:100px;
+}
+#buttons{
+  width:150px;
+}
+#buttons a{
+  margin:10px;
+  padding:0;
+}
 
 table td:first-child { border-left: none; }
+
+body{
+  overflow-x:hidden;
+}

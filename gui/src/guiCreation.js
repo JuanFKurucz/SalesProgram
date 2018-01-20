@@ -70,6 +70,9 @@ function generateRowsColumns(data){
     elementCreator("td",calcTable.querySelector("tr[title='TotalSales']"));
     elementCreator("td",calcTable.querySelector("tr[title='Recharges']"));
     elementCreator("td",calcTable.querySelector("tr[title='TransferCharge']"));
+
+    elementCreator("td",calcTable.querySelector("tr[title='70Daily']"));
+    elementCreator("td",calcTable.querySelector("tr[title='ShareDaily']"),"bold");
     createDeleteOption("Dates",dates[d]);
   }
 
@@ -101,7 +104,7 @@ function generateRowsColumns(data){
 
   elementCreator("td",calcTable.querySelector("tr[title='AllSales']"));
   elementCreator("td",calcTable.querySelector("tr[title='70']"));
-  elementCreator("td",calcTable.querySelector("tr[title='Share']"));
+  elementCreator("td",calcTable.querySelector("tr[title='Share']"),"bold");
 }
 
 function createTables(data){
@@ -159,28 +162,30 @@ function createButtons(){
       }
     });
   }
-
-  var addNumberButton = elementCreator("input",document.querySelector("#buttons"));
+  var buttonList=document.querySelector("#buttons");
+  var saveButton =  elementCreator("a",elementCreator("li",document.querySelector("#buttons"),""),"");
+  saveButton.id="saveButton";
+  saveButton.textContent="Save Everything";
+  saveButton.addEventListener("click",saveTable);
+elementCreator("br",buttonList)
+  var labelHref=elementCreator("a",elementCreator("li",buttonList,""),"");
+  var labelImport = elementCreator("label",labelHref,"");
+  labelImport.setAttribute("for","importNumbersButton");
+  labelImport.textContent="Import numbers";
+elementCreator("br",buttonList)
+  var addNumberButton = elementCreator("a",elementCreator("li",buttonList,""),"");
   addNumberButton.id="addNumberButton";
-  addNumberButton.setAttribute("type","submit");
-  addNumberButton.value="Add Number";
+  addNumberButton.textContent="Add Number";
   addNumberButton.addEventListener("click",addNumberFunction);
 
-  var addNewDate = elementCreator("input",document.querySelector("#buttons"));
+  var addNewDate = elementCreator("a",elementCreator("li",buttonList,""),"");
   addNewDate.id="addNewDate";
-  addNewDate.setAttribute("type","submit");
-  addNewDate.value="Add New Date";
+  addNewDate.textContent="Add New Date";
   addNewDate.addEventListener("click",addNewDateFunction);
 
-  var saveButton = elementCreator("input",document.querySelector("#buttons"));
-  saveButton.id="saveButton";
-  saveButton.setAttribute("type","submit");
-  saveButton.value="Save Everything";
-  saveButton.addEventListener("click",saveTable);
-
-  elementCreator("br",document.querySelector("#buttons"));
-
-  var deleteSelect = elementCreator("select",document.querySelector("#buttons"));
+  var deleteField=elementCreator("a",elementCreator("li",buttonList,""),"");
+  deleteField.textContent="Delete something:";
+  var deleteSelect = elementCreator("select",deleteField);
   deleteSelect.id="deleteSelect";
 
   var optGroupDates = elementCreator("optgroup",deleteSelect);
@@ -189,11 +194,58 @@ function createButtons(){
   var optGroupNumbers = elementCreator("optgroup",deleteSelect);
   optGroupNumbers.setAttribute("label","Numbers");
 
-  var deleteButton = elementCreator("input",document.querySelector("#buttons"));
+  var deleteButton = elementCreator("input",deleteField);
   deleteButton.id="deleteSelect";
   deleteButton.setAttribute("type","submit");
   deleteButton.value="Delete";
   deleteButton.addEventListener("click",deleteStuff);
+
+  var addProfile = elementCreator("a",elementCreator("li",buttonList,""),"");
+  addProfile.textContent="Add Profile:";
+  addProfile.parentElement.setAttribute("class","newProfile");
+  elementCreator("br",addProfile)
+  var addProfileInputName = elementCreator("input",addProfile);
+  addProfileInputName.setAttribute("type","text");
+  addProfileInputName.setAttribute("placeholder","porfile name here");
+  addProfileInputName.style.width="60%";
+  var addProfileInputSubmit = elementCreator("input",addProfile);
+  addProfileInputSubmit.setAttribute("type","submit");
+  addProfileInputSubmit.value="Add";
+  addProfileInputSubmit.id="newProfile";
+
+
+  var hideMenuButton = elementCreator("a",elementCreator("li",buttonList,""),"");
+  hideMenuButton.textContent="Hide Menu";
+  hideMenuButton.addEventListener("click",function(){
+    var sub=this.parentElement.parentElement.getElementsByTagName("li");
+    for(var i=0;i<sub.length;i++){
+      if(this.textContent=="Hide Menu"){
+        if(sub[i].textContent!="Save Everything" &&
+            sub[i].textContent!="Hide Menu"){
+          sub[i].style.display="none";
+        } else if(sub[i].textContent=="Save Everything"){
+          sub[i].getElementsByTagName("a")[0].textContent="Save";
+        }
+      } else {
+        if(sub[i].textContent=="Save"){
+          sub[i].getElementsByTagName("a")[0].textContent="Save Everything";
+        }
+        sub[i].style.display="";
+      }
+    }
+    if(this.textContent=="Hide Menu"){
+      document.querySelector("#programContainer").style.width="95%";
+      document.querySelector("#menuRight").style.right="8px";
+      document.querySelector("#menuRight").style.width="5%";
+      this.textContent=">";
+    } else {
+      document.querySelector("#menuRight").style.right="0px";
+      document.querySelector("#programContainer").style.width="85%";
+      document.querySelector("#menuRight").style.width="15%";
+      this.textContent="Hide Menu";
+    }
+
+  });
 }
 
 function loadProfiles(callback){
