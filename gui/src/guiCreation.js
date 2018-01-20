@@ -197,7 +197,7 @@ function createButtons(){
 }
 
 function loadProfiles(callback){
-  loadFile(appDir+"data\\config_profiles.json",function(fdata){
+  loadFile("config_profiles.json",function(fdata){
     var object = JSON.parse(fdata);
     callback(object);
   })

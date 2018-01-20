@@ -19,7 +19,11 @@ function loadData(profile="default",callback){
       callback(object);
     });
   } else {
-    alert("Data folder not found");
+    if(profile=="default"){
+      createDir("default.json");
+    } else {
+      alert("Data folder not found");
+    }
   }
 }
 
@@ -42,7 +46,7 @@ function forEachDirectory(callback){
 }
 
 function loadFile(path,callback,encoding="utf8"){
-  fs.readFile(path,encoding, function (err, data) {
+  fs.readFile(appData+"\\"+path,encoding, function (err, data) {
     if (err) {
         throw err;
     }
@@ -81,7 +85,7 @@ function importNumbers(pathFile,callback){
 function CheckDataFolder(callback){
   if (!fs.existsSync(appData)) {
       fs.mkdirSync(appData);
-      createDir(appData+"\\default.json");
+      createDir("default.json");
       fs.writeFile(appData+"\\config_profiles.json",JSON.stringify({"_defaultProfileOnLaunch":"default"}),'utf8',function(err) {
           if(err) {
               return console.log(err);
