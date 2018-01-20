@@ -1,11 +1,10 @@
 {
   "name": "sales-program",
-  "version": "1.0.0",
+  "version": "0.2.0.1",
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "build" : "electron-packager . --all"
+    "start": "electron ."
   },
   "author": "Juan Francisco Kurucz",
   "license": "ISC",
@@ -13,8 +12,5 @@
     "Squirrel": "0.0.1",
     "electron": "^1.7.10",
     "electron-squirrel-startup": "^1.0.0"
-  },
-  "devDependencies": {
-    "electron-packager": "^10.1.1"
   }
 }
